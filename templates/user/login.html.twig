@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block error %}
+{% endblock %}
+
+{% block body %}
+        <div class="col-lg-4 box-form">
+            <h2>Iniciar Sesión</h2>
+            <form action="{{ path('app_login') }}" method="post">
+                <div class="form-group">
+                    <label for="_username">Correo electrónico</label>
+                    <input type="text" id="username" name="_username"
+                           placeholder="Ingrese su correo"
+                           class="form-control" value="{{ last_username }}"/>
+                </div>
+                <div class="form-group">
+                    <label for="_password">Contraseña</label>
+                    <input type="password" id="password" name="_password"
+                           placeholder="Ingrese su contraseña" class="form-control"/>
+                </div>
+                <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+            </form>
+        </div>
+
+{% endblock %}

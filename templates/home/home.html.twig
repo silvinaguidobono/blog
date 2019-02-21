@@ -1,0 +1,14 @@
+{# comentario twig #}
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/home.css')}}"/>
+{% endblock %}
+    
+{% block body %}
+    {# {{ dump() }} #}
+    <h1>Blog</h1>
+{% endblock %}
+{% block footer %}
+<h6>Footer</h6>
+{% endblock %}

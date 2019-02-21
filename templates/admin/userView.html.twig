@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="well">
+            <h2>{{ user.email }}</h2>
+            <br>
+            <dl>
+                <dt>Identificación</dt>
+                <dd>
+                    {{ user.id }}
+                </dd>
+                <dt>Username</dt>
+                <dd>
+                    {{ user.username }}
+                </dd>
+                <dt>Roles</dt>
+                <dd>
+                    {% for rol in user.roles %}
+                        {{ rol }}
+                    {% endfor %}
+                </dd>
+                <dt>Activo</dt>
+                <dd>
+                    {% if(user.isActive==0) %}
+                        {{ "No" }}
+                    {% else %}
+                        {{ "Si" }}
+                    {% endif %}
+                    &nbsp;
+                </dd>
+            </dl>
+            <hr>
+            <p>
+                <a href="{{ path('app_admin_user_edit',{'id':user.id}) }}" class="btn btn-primary btn-md">Editar usuario</a>
+            </p>
+            <p><a href="{{ path('app_admin_users') }}" class="btn btn-info btn-md">Listado de usuarios</a></p>
+        </div>
+    {% endif %}
+{% endblock %}
