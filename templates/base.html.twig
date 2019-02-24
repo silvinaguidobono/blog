@@ -50,6 +50,7 @@
     </header>
     <main role="main" class="flex-shrink-0">
       <div class="container">
+          <div id="fmessage">
           {% for label, messages in app.flashes %}
               {% for message in messages %}
                   <div class="alert alert-{{ label }}">
@@ -58,6 +59,7 @@
                   </div>
               {% endfor %}
           {% endfor %}
+          </div>
           {% block body %}{% endblock %}
       </div>
     </main>

@@ -6,9 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("email",message="El correo electrónico ya existe")
  */
 class User implements UserInterface
 {
@@ -21,39 +24,32 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="El correo electrónico no debe ser blanco")
+     * @Assert\Email(message="El correo electónico es inválido")
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Assert\NotBlank(message="Debe seleccionar por lo menos un rol")
+     *
      */
     private $roles = [];
+
+    /**
+     * @Assert\NotBlank(message="La contraseña no debe ser blanco")
+     */
+    private $plainPassword;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
-    private $plainPassword;
-
-    /**
-     * @return mixed
-     */
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * @param mixed $plainPassword
-     */
-    public function setPlainPassword($plainPassword): void
-    {
-        $this->plainPassword = $plainPassword;
-    }
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Assert\NotBlank(message="El nombre de usuario no debe ser blanco")
      */
     private $username;
 
@@ -102,7 +98,6 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        //return (string) $this->email;
         return (string) $this->username;
     }
 
@@ -123,6 +118,22 @@ class User implements UserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
     }
 
     /**

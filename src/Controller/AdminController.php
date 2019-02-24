@@ -29,7 +29,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/view/{id}", name="app_admin_user_view")
+     * @Route("/admin/user/{id}/view", name="app_admin_user_view")
      */
     public function viewUser($id){
         $user=$this->getDoctrine()->getRepository(User::class)->findBy(array('id'=>$id));
@@ -68,7 +68,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/edit/{id}", name="app_admin_user_edit")
+     * @Route("/admin/user/{id}/edit", name="app_admin_user_edit")
      */
     public function editUser($id,Request $request, UserPasswordEncoderInterface $passwordEncoder){
         $user=$this->getDoctrine()->getRepository(User::class)->findBy(array('id'=>$id));
@@ -99,7 +99,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/delete/{id}", name="app_admin_user_delete")
+     * @Route("/admin/user/{id}/delete", name="app_admin_user_delete")
      */
     public function deleteUser($id, Request $request){
         $user=$this->getDoctrine()->getRepository(User::class)->findBy(array('id'=>$id));

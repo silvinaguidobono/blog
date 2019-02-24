@@ -3,13 +3,14 @@
 {% block body %}
     {% if is_granted('ROLE_ADMIN') %}
         <div class="panel panel-primary">
-        <h2>Users Administration</h2>
+        <h2>Administración de Usuarios</h2>
         <table class="table table-stripped table-middle-aligned">
             <thead class="thead-dark">
-                <th>Email</th><th>Role</th><th>Active</th><th>Actions</th>
+                <th>Nombre Usuario</th><th>Email</th><th>Roles</th><th>Activo</th><th>Acciones</th>
             </thead>
             {% for user in users %}
             <tr>
+                <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
                 <td>
                     {% for rol in user.roles %}
@@ -25,14 +26,14 @@
                 <td class="actions">
                     <a href="{{ path('app_admin_user_view',{'id':user.id}) }}" class="btn btn-sm btn-info">Ver</a>
                     <a href="{{ path('app_admin_user_edit',{'id':user.id}) }}" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="{{ path('app_admin_user_delete',{'id':user.id}) }}" class="btn btn-sm btn-danger btn-delete">Borrar</a>
+                    <a href="{{ path('app_admin_user_delete',{'id':user.id}) }}"
+                       class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>
                 </td>
             </tr>
             {% endfor %}
         </table>
             <hr>
-            <a href="{{ path('app_admin_user_new') }}" class="btn btn-primary btn-md">Add user</a>
-
+            <p><a href="{{ path('app_admin_user_new') }}" class="btn btn-primary btn-md">Agregar usuario</a></p>
         </div>
     {% endif %}
 {% endblock %}

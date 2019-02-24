@@ -3,14 +3,10 @@
 {% block body %}
     {% if is_granted('ROLE_ADMIN') %}
         <div class="well">
-            <h2>{{ user.email }}</h2>
+            <h2>Usuario con email: {{ user.email }}</h2>
             <br>
             <dl>
-                <dt>Identificación</dt>
-                <dd>
-                    {{ user.id }}
-                </dd>
-                <dt>Username</dt>
+                <dt>Nombre Usuario</dt>
                 <dd>
                     {{ user.username }}
                 </dd>

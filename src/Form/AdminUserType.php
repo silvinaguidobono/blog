@@ -29,17 +29,18 @@ class AdminUserType extends AbstractType
                 'required'=>'required',
                 'attr'=>[
                     'class'=>'form-username form-control',
-                    'placeholder'=>'Username'
+                    'placeholder'=>'Ingrese su nombre de usuario'
                 ]
             ])
             ->add('email', EmailType::class,[
                 'required'=>'required',
                 'attr'=>[
                     'class'=>'form-email form-control',
-                    'placeholder'=>'Email@email'
+                    'placeholder'=>'Ingrese su correo electrónico'
                 ]
             ])
             ->add('roles', choiceType::class,[
+                'required' => 'required',
                 'multiple' => true,
                 //'expanded' => true,
                 'choices' => [
@@ -47,32 +48,32 @@ class AdminUserType extends AbstractType
                     'User' => 'ROLE_USER'
                 ],
                 //'empty_data' => 'ROLE_USER',
-                'attr' => ['class' => 'form-check form-control']
+                'attr' => ['class' => 'form-check form-control'],
+                'label' => 'Roles'
             ])
 
             ->add('isActive', checkboxType::class,[
-                'attr' => ['class' => 'form-check form-control'],
-                'required' => false
+                //'attr' => ['class' => 'form-check form-control'],
+                'required' => false,
+                'label' => 'Activo'
             ])
-
-            ->add('plainpassword',RepeatedType::class,[
+            ->add('plainPassword',RepeatedType::class,[
                 'type'=>PasswordType::class,
                 'required'=>'required',
+                'invalid_message' => 'Las contraseñas deben ser iguales',
                 'first_options'=>[
                     'attr'=>[
                         'class'=>'form-password form-control',
-                        'placeholder'=>'Password'
+                        'placeholder'=>'Ingrese su contraseña'
                     ]
                 ],
                 'second_options'=>[
                     'attr'=>[
                         'class'=>'form-password form-control',
-                        'placeholder'=>'Repeat password'
+                        'placeholder'=>'Repita su contraseña'
                     ]
                 ]
-            ])
-
-            ;
+            ]);
     }
     public function configureOptions(OptionsResolver $resolver)
     {

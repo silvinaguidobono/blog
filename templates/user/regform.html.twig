@@ -3,33 +3,29 @@
 {% block body %}
     <div class="col-lg-4 box-form">
         <h2>Registro de usuarios</h2>
-        {{ form_start((form)) }}
-        {#
+        {{ form_start(form, { 'attr' : {'novalidate': 'novalidate', 'role' : 'form'} }) }}
         <div class="form_row">
             {{ form_label(form.username, 'Nombre de usuario') }}
-            {{ form_errors(form.username) }}
             {{ form_widget(form.username) }}
+            <span class="text-danger">{{ form_errors(form.username) }}</span>
         </div>
         <div class="form_row">
             {{ form_label(form.email, 'Correo electrónico') }}
-            {{ form_errors(form.email) }}
             {{ form_widget(form.email) }}
+            <span class="text-danger">{{ form_errors(form.email) }}</span>
         </div>
         <div class="form_row">
-            {{ form_label(form.plainpassword, 'Contraseña') }}
-            {{ form_errors(form.plainpassword) }}
-            {{ form_widget(form.plainpassword) }}
+            {{ form_label(form.plainPassword.first, 'Contraseña') }}
+            {{ form_widget(form.plainPassword.first) }}
         </div>
         <div class="form_row">
-            {{ form_label(form.plainpassword, 'Repetir contraseña') }}
-            {{ form_errors(form.plainpassword) }}
-            {{ form_widget(form.plainpassword) }}
+            {{ form_label(form.plainPassword.second, 'Repetir contraseña') }}
+            {{ form_widget(form.plainPassword.second) }}
         </div>
-        #}
-        {{ form_widget(form) }}
-        <input type="submit" class="btn btn-success" value="Registrar usuario">
-        {{ form_errors(form) }}
+        <span class="text-danger">{{ form_errors(form.plainPassword.first) }}</span>
+        <hr>
+        <p><input type="submit" class="btn btn-success" value="Registrar usuario"></p>
         {{ form_end(form) }}
-
     </div>
+
 {% endblock %}

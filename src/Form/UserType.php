@@ -26,29 +26,30 @@ class UserType extends AbstractType
                 'required'=>'required',
                 'attr'=>[
                     'class'=>'form-username form-control',
-                    'placeholder'=>'Username'
+                    'placeholder'=>'Ingrese su nombre de usuario'
                 ]
             ])
             ->add('email', EmailType::class,[
                 'required'=>'required',
                 'attr'=>[
                     'class'=>'form-email form-control',
-                    'placeholder'=>'Email@email'
+                    'placeholder'=>'Ingrese su correo electrónico'
                 ]
             ])
-            ->add('plainpassword',RepeatedType::class,[
+            ->add('plainPassword',RepeatedType::class,[
                 'type'=>PasswordType::class,
                 'required'=>'required',
+                'invalid_message' => 'Las contraseñas deben ser iguales',
                 'first_options'=>[
                     'attr'=>[
                         'class'=>'form-password form-control',
-                        'placeholder'=>'Password'
+                        'placeholder'=>'Ingrese su contraseña'
                     ]
                 ],
                 'second_options'=>[
                     'attr'=>[
                         'class'=>'form-password form-control',
-                        'placeholder'=>'Repeat password'
+                        'placeholder'=>'Repita su contraseña'
                     ]
                 ]
             ]);
