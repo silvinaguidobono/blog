@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <div class="well">
+            <h2>{{ post.title }}</h2>
+            <br>
+            <dl>
+                <dt>Contenido Post</dt>
+                <dd>
+                    {{ post.content|raw }}
+                </dd>
+                <dt>Autor</dt>
+                <dd>
+                    {{ post.author }}
+                </dd>
+                <dt>Fecha de creación</dt>
+                <dd>
+                    {% if post.createdAt is not null %}
+                        {{ post.createdAt|date('d/m/Y') }}
+                    {% endif %}
+                </dd>
+                <dt>Fecha de publicación</dt>
+                <dd>
+                    {% if post.publishedAt is not null %}
+                        {{ post.publishedAt|date('d/m/Y') }}
+                    {% else %}
+                        {{ "No publicado aún" }}
+                    {% endif %}
+                </dd>
+                <dt>Fecha de modificación</dt>
+                <dd>
+                    {% if post.modifiedAt is not null %}
+                        {{ post.modifiedAt|date('d/m/Y') }}
+                    {% endif %}
+                </dd>
+            </dl>
+            <hr>
+            <!--
+            <p>
+                <a href="{# path('app_admin_user_edit',{'id':user.id}) }#}" class="btn btn-primary btn-md">Editar usuario</a>
+            </p>
+            <p><a href="{# path('app_admin_users') }#}" class="btn btn-info btn-md">Listado de usuarios</a></p>
+            -->
+        </div>
+{% endblock %}

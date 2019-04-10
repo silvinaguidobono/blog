@@ -10,6 +10,8 @@ use App\Entity\User;
 use App\Form\AdminUserType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\Post;
+use App\Form\PostType;
 
 /**
  * Class AdminController
@@ -19,6 +21,17 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class AdminController extends AbstractController
 {
+    /**
+     * @Route("/admin/posts", name="app_admin_posts")
+     */
+    public function listPosts()
+    {
+        $user=$this->getUser();
+        $posts=$this->getDoctrine()->getRepository(Post::class)->findAll();
+        return $this->render('home/home.html.twig',['posts'=>$posts,'user'=>$user]);
+        //return $this->render('post/index.html.twig',['posts'=>$posts]);
+    }
+
     /**
      * @Route("/admin/users", name="app_admin_users")
      */
@@ -110,5 +123,41 @@ class AdminController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'Usuario eliminado correctamente');
         return $this->redirectToRoute('app_admin_users');
+    }
+
+    /**
+     * @Route("/admin/post/new", name="app_admin_post_new")
+     */
+    public function addPost(Request $request){
+        // utilizo esta función para prueba inicial de alta de post
+        $post=new Post();
+        // Rescato usuario logueado
+        $user=$this->getUser();
+        $post->setUser($user);
+        // Asigno username del usuario al autor del post
+        $autor=$user->getUsername();
+        $post->setAuthor($autor);
+
+        $form=$this->createForm(PostType::class,$post);
+
+        $form->handleRequest($request);
+        $error=$form->getErrors();
+
+        if($form->isSubmitted() && $form->isValid()){
+            //
+            $post=$form->getData();
+            //
+            // handle the entities
+            $entityManager=$this->getDoctrine()->getManager();
+            $entityManager->persist($post);
+            $entityManager->flush();
+            $this->addFlash('success', 'Post insertado correctamente');
+            return $this->redirectToRoute('app_admin_users');
+        }
+        // render the form
+        return $this->render('post/addPost.html.twig',[
+            'error'=>$error,
+            'form'=>$form->createView()
+        ]);
     }
 }

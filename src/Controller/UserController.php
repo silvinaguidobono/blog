@@ -71,4 +71,36 @@ class UserController extends AbstractController
     public function logout(){
         $this->redirectToRoute('/');
     }
+
+
+    /**
+     * @Route("/user/edit", name="app_user_edit")
+     */
+    public function editUser(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+        $userSel=$this->getUser();
+        $form=$this->createForm(UserType::class,$userSel);
+
+        $form->handleRequest($request);
+        $error=$form->getErrors();
+
+        if($form->isSubmitted() && $form->isValid()){
+            // encrypt the plainpassword
+            $password=$passwordEncoder->encodePassword($userSel,$userSel->getPlainPassword());
+            $userSel->setPassword($password);
+            // handle the entities
+            $entityManager=$this->getDoctrine()->getManager();
+            //$entityManager->persist($userSel);
+            $entityManager->flush();
+            $this->addFlash('success', 'Usuario modificado correctamente');
+            return $this->redirectToRoute('app_posts');
+        }
+
+        // render the form
+        return $this->render('user/editUser.html.twig',[
+            'error'=>$error,
+            'form'=>$form->createView()
+        ]);
+
+    }
+
 }

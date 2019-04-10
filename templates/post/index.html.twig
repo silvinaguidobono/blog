@@ -1,20 +1,54 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Hello PostController!{% endblock %}
+{# comentario twig #}
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/home.css')}}"/>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {# {{ dump() }} #}
+    <!--<h1>Blog</h1>-->
+    <div class="panel panel-primary">
+        <h2>Listado de Posts de {{ user.username }}</h2>
+        <table class="table table-stripped table-middle-aligned">
+            <thead class="thead-dark">
+            <th>Título Post</th><th>Autor</th><th>Creado</th><th>Publicado</th><th>Modificado</th><th>Acciones</th>
+            </thead>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.author }}</td>
+                    <td>
+                        {% if post.createdAt is not null %}
+                            {{ post.createdAt|date('Y-m-d') }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if post.publishedAt is not null %}
+                            {{ post.publishedAt|date('Y-m-d') }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if post.modifiedAt is not null %}
+                            {{ post.modifiedAt|date('Y-m-d') }}
+                        {% endif %}
+                    </td>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/linux/www/blog/src/Controller/PostController.php'|file_link(0) }}">src/Controller/PostController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/linux/www/blog/templates/post/users.html.twig'|file_link(0) }}">templates/post/index.html.twig</a></code></li>
-    </ul>
-</div>
+                    <td class="actions">
+                        <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver</a>
+                        <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="{{ path('app_post_delete',{'id':post.id}) }}"
+                           class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <hr>
+        <!--
+        <p><a href="{#{ path('app_admin_user_new') }#}" class="btn btn-primary btn-md">Agregar usuario</a></p>
+        -->
+    </div>
+{% endblock %}
+{% block footer %}
+    <h6>Footer</h6>
 {% endblock %}

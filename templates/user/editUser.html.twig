@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-lg-4 box-form">
+        <h2>Edición del usuario</h2>
+        {{ form_start(form, { 'attr' : {'novalidate': 'novalidate', 'role' : 'form'} }) }}
+        <div class="form_row">
+            {{ form_label(form.username, 'Nombre de usuario') }}
+            {{ form_widget(form.username) }}
+            <span class="text-danger">{{ form_errors(form.username) }}</span>
+        </div>
+        <div class="form_row">
+            {{ form_label(form.email, 'Correo electrónico') }}
+            {{ form_widget(form.email) }}
+            <span class="text-danger">{{ form_errors(form.email) }}</span>
+        </div>
+        <div class="form_row">
+            {{ form_label(form.plainPassword.first, 'Contraseña') }}
+            {{ form_widget(form.plainPassword.first) }}
+        </div>
+        <div class="form_row">
+            {{ form_label(form.plainPassword.second, 'Repetir contraseña') }}
+            {{ form_widget(form.plainPassword.second) }}
+        </div>
+        <span class="text-danger">{{ form_errors(form.plainPassword.first) }}</span>
+        <hr>
+        <p><input type="submit" class="btn btn-success" value="Modificar usuario"></p>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

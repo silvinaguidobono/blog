@@ -44,8 +44,8 @@ class AdminUserType extends AbstractType
                 'multiple' => true,
                 //'expanded' => true,
                 'choices' => [
-                    'Administrator' => 'ROLE_ADMIN',
-                    'User' => 'ROLE_USER'
+                    'Administrador' => 'ROLE_ADMIN',
+                    'Usuario' => 'ROLE_USER'
                 ],
                 //'empty_data' => 'ROLE_USER',
                 'attr' => ['class' => 'form-check form-control'],

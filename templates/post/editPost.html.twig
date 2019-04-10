@@ -1,0 +1,41 @@
+{%  extends 'base.html.twig' %}
+
+{%  block body %}
+    <div class="col-lg-8 box-form">
+        <h2>Edición de Post</h2>
+        {{ form_start(form, { 'attr' : {'novalidate': 'novalidate', 'role' : 'form'} }) }}
+        <div class="form_row">
+            {{ form_label(form.title, 'Título del Post') }}
+            {{ form_widget(form.title) }}
+            <span class="text-danger">{{ form_errors(form.title) }}</span>
+        </div>
+        <div class="form_row">
+            {{ form_label(form.content, 'Contenido del Post') }}
+            {{ form_widget(form.content) }}
+            <span class="text-danger">{{ form_errors(form.content) }}</span>
+        </div>
+        <br>
+        <div class="form_row">
+            {{ form_label(form.isPublished, 'Publicar') }}
+            {{ form_widget(form.isPublished) }}
+            <span class="text-danger">{{ form_errors(form.isPublished) }}</span>
+        </div>
+        <hr>
+        <p><input type="submit" class="btn btn-success" value="Modificar Post"></p>
+        {{ form_end(form) }}
+        {#
+        <p><a href="{{ path('app_admin_users') }}" class="btn btn-info btn-md">Listado de Posts</a></p>
+        #}
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=13it1etyax2jvwoanlsbaxluyakomm3nk2esqivihm4vqgyo"></script>
+    <script>
+        tinymce.init({
+            //selector: '.tinymce'
+            selector: 'textarea'
+        });
+    </script>
+{% endblock %}
