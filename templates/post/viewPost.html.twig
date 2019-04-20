@@ -33,13 +33,27 @@
                         {{ post.modifiedAt|date('d/m/Y') }}
                     {% endif %}
                 </dd>
+                {% if post.tags is not empty %}
+                    <dt>Etiquetas</dt>
+                    {% for etiqueta in post.tags %}
+                        <dd>{{ etiqueta.tag }}</dd>
+                    {% endfor %}
+                {% endif %}
+                {% if post.comments is not empty %}
+                    <dt>Comentarios</dt>
+                    {% for comentario in post.comments %}
+                        <dd>{{ comentario.comment }}</dd>
+                    {% endfor %}
+                {% endif %}
             </dl>
             <hr>
-            <!--
-            <p>
-                <a href="{# path('app_admin_user_edit',{'id':user.id}) }#}" class="btn btn-primary btn-md">Editar usuario</a>
-            </p>
-            <p><a href="{# path('app_admin_users') }#}" class="btn btn-info btn-md">Listado de usuarios</a></p>
-            -->
+            {% if is_granted('IS_AUTHENTICATED_FULLY') and post.publishedAt is not null  %}
+                <p>
+                <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-primary btn-lg">Comentar</a>
+                </p>
+            {% endif %}
+            <!--<p>
+                <a href="{#{ path('app_post_edit',{'id':post.id}) }#}" class="btn btn-sm btn-primary">Editar</a>
+            </p>-->
         </div>
 {% endblock %}

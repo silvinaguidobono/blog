@@ -32,6 +32,9 @@
                     <td class="actions">
                         <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver</a>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            {% if post.publishedAt is not null %}
+                                <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-sm btn-primary">Comentar</a>
+                            {% endif %}
                             {% if is_granted('ROLE_ADMIN') or userId == post.user.id %}
                                 <!--- Ver si voy a app_admin_post_edit si ROLE_ADMIN ************* -->
                                 <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>

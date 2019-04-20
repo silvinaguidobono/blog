@@ -36,9 +36,13 @@
 
                     <td class="actions">
                         <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver</a>
+                        {% if post.publishedAt is not null %}
+                            <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-sm btn-primary">Comentar</a>
+                        {% endif %}
                         <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>
                         <a href="{{ path('app_post_delete',{'id':post.id}) }}"
                            class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>
+
                     </td>
                 </tr>
             {% endfor %}

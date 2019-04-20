@@ -40,7 +40,7 @@ class PostType extends AbstractType
                     'placeholder'=>'Ingrese el contenido del post'
                 ]
             ])
-
+            */
             ->add('tags', TagsInputType::class, [
                 'label' => 'Tags',
 
@@ -50,15 +50,11 @@ class PostType extends AbstractType
                     'class'=>'form-control'
                 ]
             ])
-            */
             ->add('isPublished', checkboxType::class,[
                 //'attr' => ['class' => 'form-check form-control'],
                 'required' => false,
                 'label' => 'Publicar'
             ])
-
-            //->add('createdAt')
-            //->add('tags')
         ;
     }
 

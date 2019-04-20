@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Entity\User;
-use App\Form\AdminUserType;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Form\AdminUserType;
+use App\Entity\User;
 use App\Entity\Post;
-use App\Form\PostType;
+use App\Entity\Tag;
 
 /**
  * Class AdminController
@@ -21,6 +21,16 @@ use App\Form\PostType;
  */
 class AdminController extends AbstractController
 {
+    /**
+     * @Route("/admin/tags", name="app_admin_tags")
+     */
+    public function listTags()
+    {
+        $tags=$this->getDoctrine()->getRepository(Tag::class)->findAll();
+        return $this->render('tag/index.html.twig',['tags'=>$tags]);
+        //return $this->render('tag/index.html.twig',['controller_name'=>"TagController"]);
+    }
+
     /**
      * @Route("/admin/posts", name="app_admin_posts")
      */
@@ -123,41 +133,5 @@ class AdminController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'Usuario eliminado correctamente');
         return $this->redirectToRoute('app_admin_users');
-    }
-
-    /**
-     * @Route("/admin/post/new", name="app_admin_post_new")
-     */
-    public function addPost(Request $request){
-        // utilizo esta función para prueba inicial de alta de post
-        $post=new Post();
-        // Rescato usuario logueado
-        $user=$this->getUser();
-        $post->setUser($user);
-        // Asigno username del usuario al autor del post
-        $autor=$user->getUsername();
-        $post->setAuthor($autor);
-
-        $form=$this->createForm(PostType::class,$post);
-
-        $form->handleRequest($request);
-        $error=$form->getErrors();
-
-        if($form->isSubmitted() && $form->isValid()){
-            //
-            $post=$form->getData();
-            //
-            // handle the entities
-            $entityManager=$this->getDoctrine()->getManager();
-            $entityManager->persist($post);
-            $entityManager->flush();
-            $this->addFlash('success', 'Post insertado correctamente');
-            return $this->redirectToRoute('app_admin_users');
-        }
-        // render the form
-        return $this->render('post/addPost.html.twig',[
-            'error'=>$error,
-            'form'=>$form->createView()
-        ]);
     }
 }

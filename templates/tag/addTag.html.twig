@@ -1,0 +1,20 @@
+{%  extends 'base.html.twig' %}
+
+{%  block body %}
+    <div class="col-lg-8 box-form">
+        <h2>Nueva Etiqueta</h2>
+        {{ form_start(form, { 'attr' : {'novalidate': 'novalidate', 'role' : 'form'} }) }}
+        <div class="form_row">
+            {{ form_label(form.tag, 'Nombre de etiqueta') }}
+            {{ form_widget(form.tag) }}
+            <span class="text-danger">{{ form_errors(form.tag) }}</span>
+        </div>
+        <hr>
+        <p><input type="submit" class="btn btn-success" value="Crear Etiqueta"></p>
+        {{ form_end(form) }}
+        <p>
+            <a href="{{ path('app_admin_tags') }}" class="btn btn-primary">Listado de etiquetas</a>
+        </p>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="well">
+        <h2>Etiqueta: {{ tag.tag }}</h2>
+        <br>
+        <dl>
+            {% if tag.posts is not empty %}
+                <dt>Posts asociados</dt>
+                {% for post in tag.posts %}
+                    <dd>{{ post.title }}</dd>
+                {% endfor %}
+            {% else %}
+                <dt>Posts asociados</dt>
+                <dd>No hay posts con esta etiqueta</dd>
+            {% endif %}
+        </dl>
+        <hr>
+        <p>
+            <a href="{{ path('app_admin_tags') }}" class="btn btn-primary">Listado de etiquetas</a>
+        </p>
+    </div>
+{% endblock %}

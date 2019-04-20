@@ -1,4 +1,8 @@
 {%  extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-tagsinput.css') }}"/>
+{% endblock %}
 
 {%  block body %}
     <div class="col-lg-8 box-form">
@@ -13,6 +17,12 @@
             {{ form_label(form.content, 'Contenido del Post') }}
             {{ form_widget(form.content) }}
             <span class="text-danger">{{ form_errors(form.content) }}</span>
+        </div>
+        <br>
+        <div class="form_row">
+            {{ form_label(form.tags, 'Tags del Post') }}
+            {{ form_widget(form.tags) }}
+            <span class="text-danger">{{ form_errors(form.tags) }}</span>
         </div>
         <br>
         <div class="form_row">
@@ -31,6 +41,7 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{asset("js/bootstrap-tagsinput.min.js")}}"></script>
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=13it1etyax2jvwoanlsbaxluyakomm3nk2esqivihm4vqgyo"></script>
     <script>
         tinymce.init({

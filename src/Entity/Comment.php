@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
@@ -17,9 +18,10 @@ class Comment
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="El comentario no debe ser blanco")
      */
-    private $description;
+    private $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
@@ -37,15 +39,14 @@ class Comment
         return $this->id;
     }
 
-    public function getDescription(): ?string
+    public function getComment()
     {
-        return $this->description;
+        return $this->comment;
     }
 
-    public function setDescription(string $description): self
+    public function setComment($comment)
     {
-        $this->description = $description;
-
+        $this->comment = $comment;
         return $this;
     }
 

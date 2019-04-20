@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Form\PostType;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Post;
+use App\Entity\Tag;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 
 class PostController extends AbstractController
 {
@@ -27,8 +32,8 @@ class PostController extends AbstractController
      * @Route("/post/{id}/view", name="app_post_view")
      */
     public function viewPost($id){
-        $post=$this->getDoctrine()->getRepository(Post::class)->findBy(array('id'=>$id));
-        return $this->render('post/viewPost.html.twig',['post'=>$post[0]]);
+        $post=$this->getDoctrine()->getRepository(Post::class)->find($id);
+        return $this->render('post/viewPost.html.twig',['post'=>$post]);
     }
 
     /**
@@ -78,26 +83,33 @@ class PostController extends AbstractController
      * @Route("/post/{id}/edit", name="app_post_edit")
      */
     public function editPost($id,Request $request){
-        $post=$this->getDoctrine()->getRepository(Post::class)->findBy(array('id'=>$id));
-        $postSel=$post[0];
-        $form=$this->createForm(PostType::class,$postSel);
-
+        $post=$this->getDoctrine()->getRepository(Post::class)->find($id);
+        // controlo que no se puedan editar posts ajenos salvo que sea administrador.
+        $user=$this->getUser();
+        if(!(in_array("ROLE_ADMIN",$user->getRoles())) && $user->getId() != $post->getUser()->getId()){
+            $this->addFlash('warning', 'No puede editar un post ajeno');
+            return $this->redirectToRoute('app_homepage');
+        }
+        $form=$this->createForm(PostType::class,$post);
         $form->handleRequest($request);
         $error=$form->getErrors();
 
         if($form->isSubmitted() && $form->isValid()){
             // Actualiza fecha de modificación del post
             $fecha_actual = new \DateTime();
-            $postSel->setModifiedAt($fecha_actual);
+            $post->setModifiedAt($fecha_actual);
             // Actualiza fecha de publicación del post no publicado, si marca Publicar
-            if($postSel->getPublishedAt() == null && $postSel->getisPublished()){
-                $postSel->setPublishedAt($fecha_actual);
+            if($post->getPublishedAt() == null && $post->getisPublished()){
+                $post->setPublishedAt($fecha_actual);
             }
             // handle the entities
             $entityManager=$this->getDoctrine()->getManager();
-            //$entityManager->persist($postSel);
+            //$entityManager->persist($post);
             $entityManager->flush();
             $this->addFlash('success', 'Post modificado correctamente');
+            // Pruebas para volver atrás
+            //return $this->redirect($request->headers->get('referer'));
+            //return $this->redirect($this->getRequest()->headers->get('referer'));
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -113,13 +125,62 @@ class PostController extends AbstractController
      * @Route("/post/{id}/delete", name="app_post_delete")
      */
     public function deletePost($id, Request $request){
-        $post=$this->getDoctrine()->getRepository(Post::class)->findBy(array('id'=>$id));
-        $postSel=$post[0];
+        $post=$this->getDoctrine()->getRepository(Post::class)->find($id);
         $entityManager=$this->getDoctrine()->getManager();
-        $entityManager->remove($postSel);
+        $entityManager->remove($post);
         $entityManager->flush();
         $this->addFlash('success', 'Post eliminado correctamente');
         return $this->redirectToRoute('app_homepage');
+    }
+
+    /**
+     * @Route("/tag/search", name="app_tag_search")
+     */
+    public function searchTag(Request $request){
+        $form=$this->createFormBuilder(null)
+            ->add('query',TextType::class)
+            ->add('search',SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        //$error=$form->getErrors();
+
+        if($form->isSubmitted() && $form->isValid()){
+            // Capturo etiqueta ingresada
+            $tag_input=$form->getData();
+            $query=$tag_input['query'];
+            // Busco en la tabla de etiquetas ese nombre de etiqueta
+            $tag=$this->getDoctrine()->getRepository(Tag::class)->findOneByTag($query);
+            if(is_null($tag)){
+                $this->addFlash('warning', 'Etiqueta no encontrada');
+                return $this->redirectToRoute('app_homepage');
+            }
+            // Obtengo los posts con esa etiqueta
+            $post_tag=$tag->getPosts();
+            // Me quedo con los posts publicados con esa etiqueta
+            $posts=[];
+            foreach ($post_tag as $post) {
+                // Si el post tiene fecha de publiación, lo agrego a la salida
+                if(!is_null($post->getpublishedAt())){
+                    array_push($posts,$post);
+                }
+            }
+            if(empty($posts)){
+                $this->addFlash('warning', 'No hay posts publicados con esa etiqueta');
+                return $this->redirectToRoute('app_homepage');
+            }
+            // Obtengo el id del usuario logeado
+            $user_id=0;
+            if(!is_null($this->getUser())){
+                $user=$this->getUser();
+                $user_id=$user->getId();
+            }
+            return $this->render('home/home.html.twig',['posts'=>$posts,'userId'=>$user_id]);
+        }
+        // render the form
+        return $this->render('post/searchTag.html.twig',[
+            'form'=>$form->createView()
+        ]);
     }
 
 }

@@ -1,0 +1,38 @@
+{# comentario twig #}
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/home.css')}}"/>
+{% endblock %}
+
+{% block body %}
+    {# {{ dump() }} #}
+    <!--<h1>Blog</h1>-->
+    <div class="panel panel-primary">
+        <h2>Listado de Etiquetas</h2>
+        <table class="table table-stripped table-middle-aligned">
+            <thead class="thead-dark">
+            <th>Nombre de Etiqueta</th><th>Cantidad Post</th><th>Acciones</th>
+            </thead>
+            {% for tag in tags %}
+                <tr>
+                    <td>{{ tag.tag }}</td>
+                    <td>{{ tag.posts.count() }}</td>
+
+                    <td class="actions">
+                        <a href="{{ path('app_tag_view',{'id':tag.id}) }}" class="btn btn-sm btn-info">Ver</a>
+                        <a href="{{ path('app_tag_edit',{'id':tag.id}) }}" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="{{ path('app_tag_delete',{'id':tag.id}) }}"
+                           class="btn btn-sm btn-danger btn-delete"
+                           onclick="return confirm('Estás seguro?')">Borrar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <hr>
+        <p><a href="{{ path('app_tag_new') }}" class="btn btn-primary btn-md">Agregar etiqueta</a></p>
+    </div>
+{% endblock %}
+{% block footer %}
+    <h6>Footer</h6>
+{% endblock %}

@@ -1,0 +1,20 @@
+{{ form_start(form, {
+    'attr' : {
+        'novalidate': 'novalidate',
+        'role' : 'form',
+        'class' : 'form-inline mt-2 mt-md-0',
+        'action' : path('app_tag_search')
+    } })
+}}
+{{ form_widget(form.query, {
+    'attr' : {
+        'class' : 'form-control mr-sm-2',
+        'placeholder' : 'Ingresa una etiqueta'
+    }
+}) }}
+{{ form_widget(form.search, { 'label' : 'Buscar',
+    'attr' : {
+        'class' : 'btn btn-outline-success my-2 my-sm-0'
+    }
+}) }}
+{{ form_end(form) }}
