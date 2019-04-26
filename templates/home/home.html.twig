@@ -9,50 +9,28 @@
     {# {{ dump() }} #}
     <!--<h1>Blog</h1>-->
     <div class="panel panel-primary">
-        <h2>Listado de Post</h2>
-        <table class="table table-stripped table-middle-aligned">
-            <thead class="thead-dark">
-            <th>Título Post</th><th>Autor</th><th>Publicado</th><th>Modificado</th><th>Acciones</th>
-            </thead>
-            {% for post in posts %}
-                <tr>
-                    <td>{{ post.title }}</td>
-                    <td>{{ post.author }}</td>
-                    <td>
-                    {% if post.publishedAt is not null %}
-                        {{ post.publishedAt|date('Y-m-d') }}
-                    {% endif %}
-                    </td>
-                    <td>
-                        {% if post.modifiedAt is not null %}
-                            {{ post.modifiedAt|date('Y-m-d') }}
-                        {% endif %}
-                    </td>
-
-                    <td class="actions">
-                        <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver</a>
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            {% if post.publishedAt is not null %}
-                                <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-sm btn-primary">Comentar</a>
-                            {% endif %}
-                            {% if is_granted('ROLE_ADMIN') or userId == post.user.id %}
-                                <!--- Ver si voy a app_admin_post_edit si ROLE_ADMIN ************* -->
-                                <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>
-                                <!--- Ver si voy a app_admin_post_delete si ROLE_ADMIN ************* -->
-                                <a href="{{ path('app_post_delete',{'id':post.id}) }}"
-                                   class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>
-                            {% endif %}
-                        {% endif %}
-                        <!--
-                           -->
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        <br>
+        <!--<h2>Listado de Post</h2>-->
+        {% for post in pagination %}
+        <div class="jumbotron p-4 p-md-5 text-dark rounded">
+            <div class="col-md-6 px-0">
+                <h2 class="display-4 font-italic">{{ post.title }}</h2>
+                {% if post.publishedAt is not null %}
+                    <p class="text-secondary font-italic">{{ post.publishedAt|date('d/m/Y') }} por {{ post.author }}</p>
+                {% else %}
+                    <p class="text-secondary font-italic">{{ post.author }}</p>
+                {% endif %}
+                <p class="lead my-3">{{ post.content[:500]|raw }}</p>
+                <!--<a href="#" class="stretched-link">Leer más</a>-->
+                <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver más</a>
+            </div>
+        </div>
+        {% endfor %}
+        {# display navigation #}
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
         <hr>
-        <!--
-        <p><a href="{#{ path('app_admin_user_new') }#}" class="btn btn-primary btn-md">Agregar usuario</a></p>
-        -->
     </div>
 {% endblock %}
 {% block footer %}

@@ -9,7 +9,11 @@
     {# {{ dump() }} #}
     <!--<h1>Blog</h1>-->
     <div class="panel panel-primary">
-        <h2>Listado de Posts de {{ user.username }}</h2>
+        {% if username == '' %}
+            <h2>Listado de Posts</h2>
+        {% else %}
+            <h2>Listado de Posts de {{ username }}</h2>
+        {% endif %}
         <table class="table table-stripped table-middle-aligned">
             <thead class="thead-dark">
             <th>Título Post</th><th>Autor</th><th>Creado</th><th>Publicado</th><th>Modificado</th><th>Acciones</th>
@@ -36,9 +40,6 @@
 
                     <td class="actions">
                         <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver</a>
-                        {% if post.publishedAt is not null %}
-                            <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-sm btn-primary">Comentar</a>
-                        {% endif %}
                         <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>
                         <a href="{{ path('app_post_delete',{'id':post.id}) }}"
                            class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>

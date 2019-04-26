@@ -36,10 +36,9 @@ class AdminController extends AbstractController
      */
     public function listPosts()
     {
-        $user=$this->getUser();
         $posts=$this->getDoctrine()->getRepository(Post::class)->findAll();
-        return $this->render('home/home.html.twig',['posts'=>$posts,'user'=>$user]);
-        //return $this->render('post/index.html.twig',['posts'=>$posts]);
+        //return $this->render('home/home.html.twig',['posts'=>$posts]);
+        return $this->render('post/index.html.twig',['posts'=>$posts,'username'=>'']);
     }
 
     /**

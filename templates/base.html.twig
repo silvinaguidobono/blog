@@ -34,32 +34,29 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
                 </li>
-                <!-- Dropdown menu  ********************************-->
-                <li class="dropdown navbar-pull-right">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{app.user.username}}<span class="caret"></span></a>
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle">{{app.user.username}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% if is_granted('ROLE_ADMIN') %}
                             <li >
-                                <a href="{{path("app_admin_users")}}">Administrar Usuarios</a>
+                                <a class="dropdown-item" href="{{path("app_admin_users")}}">Administrar Usuarios</a>
                             </li>
                             <li >
-                                <a href="{{path("app_admin_posts")}}">Administrar Posts</a>
+                                <a class="dropdown-item" href="{{path("app_admin_posts")}}">Administrar Posts</a>
                             </li>
                             <li >
-                                <a href="{{path("app_admin_tags")}}">Administrar Etiquetas</a>
+                                <a class="dropdown-item" href="{{path("app_admin_tags")}}">Administrar Etiquetas</a>
                             </li>
                         {% endif %}
-                        <li><a href="{{path("app_user_edit")}}">Editar Usuario</a></li>
-                        <li><a href="{{path("app_posts")}}">Mis Posts</a></li>
-                        <li><a href="{{path("app_post_new")}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Post</a></li>
-                        <li><a href="{{path("app_logout")}}">Logout</a></li>
+                        <li><a class="dropdown-item" href="{{path("app_user_edit")}}">Editar Usuario</a></li>
+                        <li><a class="dropdown-item" href="{{path("app_posts")}}">Mis Posts</a></li>
+                        <li><a class="dropdown-item" href="{{path("app_post_new")}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo Post</a></li>
+                        <li><a class="dropdown-item" href="{{path("app_logout")}}">Logout</a></li>
                     </ul>
                 </li>
-                <!-- Fin Dropdown menu  ********************************-->
-
             {% endif %}
           </ul>
-            {{ render(controller('App\\Controller\\PostController::searchTag')) }}
+            {{ render(controller('App\\Controller\\PostController::tagForm')) }}
           {#
           <form class="form-inline mt-2 mt-md-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">

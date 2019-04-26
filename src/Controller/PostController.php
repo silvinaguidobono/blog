@@ -12,7 +12,7 @@ use App\Entity\Post;
 use App\Entity\Tag;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 class PostController extends AbstractController
 {
@@ -22,18 +22,25 @@ class PostController extends AbstractController
     public function listPosts()
     {
         $user=$this->getUser();
+        $username=$user->getUsername();
         $posts=$this->getDoctrine()->getRepository(Post::class)->findBy(array('user'=>$user));
         //$posts=$this->getDoctrine()->getRepository(Post::class)->findAll();
         //return $this->render('post/index.html.twig',['controller_name'=>"PostController"]);
-        return $this->render('post/index.html.twig',['posts'=>$posts,'user'=>$user]);
+        return $this->render('post/index.html.twig',['posts'=>$posts,'username'=>$username]);
     }
 
     /**
      * @Route("/post/{id}/view", name="app_post_view")
      */
     public function viewPost($id){
+        // Obtengo el id del usuario logeado
+        $user_id=0;
+        if(!is_null($this->getUser())){
+            $user=$this->getUser();
+            $user_id=$user->getId();
+        }
         $post=$this->getDoctrine()->getRepository(Post::class)->find($id);
-        return $this->render('post/viewPost.html.twig',['post'=>$post]);
+        return $this->render('post/viewPost.html.twig',['post'=>$post,'userId'=>$user_id]);
     }
 
     /**
@@ -70,7 +77,7 @@ class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
             $this->addFlash('success', 'Post insertado correctamente');
-            return $this->redirectToRoute('app_homepage');
+            return $this->redirectToRoute('app_posts');
         }
         // render the form
         return $this->render('post/addPost.html.twig',[
@@ -110,7 +117,7 @@ class PostController extends AbstractController
             // Pruebas para volver atrás
             //return $this->redirect($request->headers->get('referer'));
             //return $this->redirect($this->getRequest()->headers->get('referer'));
-            return $this->redirectToRoute('app_homepage');
+            return $this->redirectToRoute('app_posts');
         }
 
         // render the form
@@ -130,13 +137,15 @@ class PostController extends AbstractController
         $entityManager->remove($post);
         $entityManager->flush();
         $this->addFlash('success', 'Post eliminado correctamente');
-        return $this->redirectToRoute('app_homepage');
+        return $this->redirectToRoute('app_posts');
     }
 
+
     /**
-     * @Route("/tag/search", name="app_tag_search")
+     * @Route("/tag/form", name="app_tag_form")
      */
-    public function searchTag(Request $request){
+    public function tagForm(Request $request)
+    {
         $form=$this->createFormBuilder(null)
             ->add('query',TextType::class)
             ->add('search',SubmitType::class)
@@ -149,38 +158,46 @@ class PostController extends AbstractController
             // Capturo etiqueta ingresada
             $tag_input=$form->getData();
             $query=$tag_input['query'];
-            // Busco en la tabla de etiquetas ese nombre de etiqueta
-            $tag=$this->getDoctrine()->getRepository(Tag::class)->findOneByTag($query);
-            if(is_null($tag)){
-                $this->addFlash('warning', 'Etiqueta no encontrada');
-                return $this->redirectToRoute('app_homepage');
-            }
-            // Obtengo los posts con esa etiqueta
-            $post_tag=$tag->getPosts();
-            // Me quedo con los posts publicados con esa etiqueta
-            $posts=[];
-            foreach ($post_tag as $post) {
-                // Si el post tiene fecha de publiación, lo agrego a la salida
-                if(!is_null($post->getpublishedAt())){
-                    array_push($posts,$post);
-                }
-            }
-            if(empty($posts)){
-                $this->addFlash('warning', 'No hay posts publicados con esa etiqueta');
-                return $this->redirectToRoute('app_homepage');
-            }
-            // Obtengo el id del usuario logeado
-            $user_id=0;
-            if(!is_null($this->getUser())){
-                $user=$this->getUser();
-                $user_id=$user->getId();
-            }
-            return $this->render('home/home.html.twig',['posts'=>$posts,'userId'=>$user_id]);
+
+            return $this->redirectToRoute('app_tag_search',['etiqueta' => $query]);
         }
-        // render the form
+
         return $this->render('post/searchTag.html.twig',[
-            'form'=>$form->createView()
+        'form'=>$form->createView()
         ]);
     }
 
+    /**
+     * @Route("/tag/{etiqueta}/search", name="app_tag_search")
+     */
+    public function searchTag(Request $request, PaginatorInterface $paginator, $etiqueta){
+        // Busco en la tabla de etiquetas ese nombre de etiqueta
+        $tag=$this->getDoctrine()->getRepository(Tag::class)->findOneByTag($etiqueta);
+        if(is_null($tag)){
+            $this->addFlash('warning', 'Etiqueta no encontrada');
+            return $this->redirectToRoute('app_homepage');
+        }
+        // Obtengo los posts con esa etiqueta
+        $post_tag=$tag->getPosts();
+        // Me quedo con los posts publicados con esa etiqueta
+        $posts=[];
+        foreach ($post_tag as $post) {
+            // Si el post tiene fecha de publiación, lo agrego a la salida
+            if(!is_null($post->getpublishedAt())){
+                array_push($posts,$post);
+            }
+        }
+        if(empty($posts)){
+            $this->addFlash('warning', 'No hay posts publicados con esa etiqueta');
+            return $this->redirectToRoute('app_homepage');
+        }
+
+        $pagination = $paginator->paginate(
+            $posts, // query no el resultado
+            $request->query->getInt('page', 1), // número de página
+            3 // límite por página
+        );
+
+        return $this->render('home/home.html.twig',['pagination'=>$pagination]);
+    }
 }

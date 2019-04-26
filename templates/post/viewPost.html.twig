@@ -47,13 +47,17 @@
                 {% endif %}
             </dl>
             <hr>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') and post.publishedAt is not null  %}
-                <p>
-                <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-primary btn-lg">Comentar</a>
-                </p>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% if post.publishedAt is not null %}
+                    {# Si está logeado y el post está publicacdo, el usuario puede comentar #}
+                    <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-sm btn-primary">Comentar</a>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') or userId == post.user.id %}
+                    {# Si es usuario administrador o es el autor del post, puede editar y borrar el post #}
+                    <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>
+                    <a href="{{ path('app_post_delete',{'id':post.id}) }}"
+                       class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>
+                {% endif %}
             {% endif %}
-            <!--<p>
-                <a href="{#{ path('app_post_edit',{'id':post.id}) }#}" class="btn btn-sm btn-primary">Editar</a>
-            </p>-->
         </div>
 {% endblock %}
