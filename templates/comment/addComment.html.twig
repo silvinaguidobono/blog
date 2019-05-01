@@ -1,20 +1,11 @@
-{%  extends 'base.html.twig' %}
-
-{%  block body %}
-    <div class="col-lg-8 box-form">
-        <h2>Nuevo Comentario</h2>
-        {{ form_start(form, { 'attr' : {'novalidate': 'novalidate', 'role' : 'form'} }) }}
-        <div class="form_row">
-            {{ form_label(form.comment, 'Contenido del comentario') }}
-            {{ form_widget(form.comment) }}
-            <span class="text-danger">{{ form_errors(form.comment) }}</span>
-        </div>
-        <hr>
-        <p><input type="submit" class="btn btn-success" value="Crear Comenario"></p>
-        {{ form_end(form) }}
-        {#
-        <p><a href="{{ path('app_admin_users') }}" class="btn btn-info btn-md">Listado de Posts</a></p>
-        #}
+<fieldset>
+    {{form_start(form,{method: 'POST', action: path('app_comment_new', {'id': post.id})})}}
+    <div class="form_row">
+        {{ form_label(form.comment, 'Nuevo Comentario') }}
+        {{ form_widget(form.comment) }}
+        <span class="text-danger">{{ form_errors(form.comment) }}</span>
     </div>
-
-{% endblock %}
+    <hr>
+    <p><input type="submit" class="btn btn-success" value="Publicar Comenario"></p>
+    {{ form_end(form) }}
+</fieldset>

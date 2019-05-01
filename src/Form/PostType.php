@@ -32,15 +32,6 @@ class PostType extends AbstractType
                     'placeholder'=>'Ingrese el contenido del post'
                 ]
             ])
-            /*
-            ->add('content',TextType::class,[
-                'required'=>'required',
-                'attr'=>[
-                    'class'=>'form-content form-control',
-                    'placeholder'=>'Ingrese el contenido del post'
-                ]
-            ])
-            */
             ->add('tags', TagsInputType::class, [
                 'label' => 'Tags',
 

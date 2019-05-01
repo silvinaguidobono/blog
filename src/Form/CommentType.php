@@ -17,7 +17,7 @@ class CommentType extends AbstractType
                 'required'=>'required',
                 'attr'=>[
                     'class'=>'form-title form-control',
-                    'placeholder'=>'Ingrese el comentario del post'
+                    'placeholder'=>'Ingrese un nuevo comentario'
                 ]
             ])
         ;

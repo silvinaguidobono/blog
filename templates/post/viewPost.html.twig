@@ -1,63 +1,53 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-        <div class="well">
-            <h2>{{ post.title }}</h2>
-            <br>
-            <dl>
-                <dt>Contenido Post</dt>
-                <dd>
-                    {{ post.content|raw }}
-                </dd>
-                <dt>Autor</dt>
-                <dd>
-                    {{ post.author }}
-                </dd>
-                <dt>Fecha de creación</dt>
-                <dd>
-                    {% if post.createdAt is not null %}
-                        {{ post.createdAt|date('d/m/Y') }}
-                    {% endif %}
-                </dd>
-                <dt>Fecha de publicación</dt>
-                <dd>
+        <div class="card bg-light mt-3 mb-3">
+            <div class="card-header">
+                <h2>{{ post.title }}</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-text float-left text-primary">De {{ post.author }}</h5>
+                <h5 class="card-text text-right text-primary">
                     {% if post.publishedAt is not null %}
-                        {{ post.publishedAt|date('d/m/Y') }}
+                        Publicado {{ post.publishedAt|date('d/m/Y') }}
                     {% else %}
                         {{ "No publicado aún" }}
                     {% endif %}
-                </dd>
-                <dt>Fecha de modificación</dt>
-                <dd>
-                    {% if post.modifiedAt is not null %}
-                        {{ post.modifiedAt|date('d/m/Y') }}
-                    {% endif %}
-                </dd>
+                </h5>
+                <p class="card-text">{{ post.content|raw }}</p>
                 {% if post.tags is not empty %}
-                    <dt>Etiquetas</dt>
                     {% for etiqueta in post.tags %}
-                        <dd>{{ etiqueta.tag }}</dd>
+                        <p class="btn btn-info">{{ etiqueta.tag }}</p>
                     {% endfor %}
+                    <br>
                 {% endif %}
                 {% if post.comments is not empty %}
-                    <dt>Comentarios</dt>
-                    {% for comentario in post.comments %}
-                        <dd>{{ comentario.comment }}</dd>
-                    {% endfor %}
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><h5>Comentarios</h5></li>
+                   {% for comentario in post.comments %}
+                   <li class="list-group-item">
+                       <h5 class="card-title">de {{ comentario.user.username }}</h5>
+                       <p class="card-text">{{ comentario.comment }}</p>
+                   </li>
+                   {% endfor %}
+                </ul>
+                <br>
                 {% endif %}
-            </dl>
-            <hr>
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {% if post.publishedAt is not null %}
-                    {# Si está logeado y el post está publicacdo, el usuario puede comentar #}
-                    <a href="{{ path('app_comment_new',{'id':post.id}) }}" class="btn btn-sm btn-primary">Comentar</a>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {% if post.publishedAt is not null %}
+                        {# Si está logueado y el post está publicacdo, el usuario puede comentar #}
+                        {{render(controller('App\\Controller\\CommentController::commentForm',{'id': post.id}))}}
+                        {#
+                        {{render(controller('App\\Controller\\CommentController::newComment',{'id': post.id}))}}
+                        #}
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or userId == post.user.id %}
+                        {# Si es usuario administrador o es el autor del post, puede editar y borrar el post #}
+                        <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar Post</a>
+                        <a href="{{ path('app_post_delete',{'id':post.id}) }}"
+                           class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar Post</a>
+                    {% endif %}
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN') or userId == post.user.id %}
-                    {# Si es usuario administrador o es el autor del post, puede editar y borrar el post #}
-                    <a href="{{ path('app_post_edit',{'id':post.id}) }}" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="{{ path('app_post_delete',{'id':post.id}) }}"
-                       class="btn btn-sm btn-danger btn-delete" onclick="return confirm('Estás seguro?')">Borrar</a>
-                {% endif %}
-            {% endif %}
+            </div>
         </div>
 {% endblock %}

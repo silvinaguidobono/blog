@@ -7,7 +7,7 @@
         <div class="form_row">
             {{ form_label(form.tag, 'Nombre de etiqueta') }}
             {{ form_widget(form.tag) }}
-            <span class="text-danger">{{ form_errors(form.tag) }}</span>
+            <span class="error-message text-danger">{{ form_errors(form.tag) }}</span>
         </div>
         <hr>
         <p><input type="submit" class="btn btn-success" value="Crear Etiqueta"></p>
@@ -17,4 +17,8 @@
         </p>
     </div>
 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset("js/custom/tag-test.js")}}"></script>
 {% endblock %}

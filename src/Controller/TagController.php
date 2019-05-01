@@ -7,6 +7,8 @@ use App\Form\TagType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Repository\TagRepository;
 
 class TagController extends AbstractController
 {
@@ -96,5 +98,25 @@ class TagController extends AbstractController
         $this->addFlash('success', 'Etiqueta eliminada correctamente');
         return $this->redirectToRoute('app_admin_tags');
     }
+
+    /**
+     * @Route("/tag-test", name="app_tag_test", methods={"POST"})
+     */
+    public function tagTest(Request $request, TagRepository $tag_repos){
+        //takes tag from form
+        $tag= $request->get("tag");
+        // testing if exists in database
+        $em=$this->getDoctrine()->getManager();
+        $tag_isset=$tag_repos->findOneBy(['tag'=>$tag]);
+        $res="used";
+        if(is_null($tag_isset)){
+            $res="unused";
+        }else{
+            $res="used";
+        }
+        //returns an AJAX Response
+        return new Response($res);
+    }
+
 
 }

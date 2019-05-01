@@ -8,6 +8,7 @@ use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class CommentController extends AbstractController
@@ -26,7 +27,6 @@ class CommentController extends AbstractController
      * @Route("/comment/{id}/new", name="app_comment_new")
      */
     public function newComment($id,Request $request){
-        //$post=$this->getDoctrine()->getRepository(Post::class)->findBy(array('id'=>$id));
         $post=$this->getDoctrine()->getRepository(Post::class)->find($id);
         // crea nuevo objeto Comment
         $comment=new Comment();
@@ -55,7 +55,26 @@ class CommentController extends AbstractController
         // render the form
         return $this->render('comment/addComment.html.twig',[
             'error'=>$error,
+            'post' => $post,
             'form'=>$form->createView()
+        ]);
+    }
+
+    /**
+     * This controller is called directly via the render() function in the
+     * post/viewPost.html.twig template. That's why it's not needed to define
+     * a route name for it.
+     *
+     * The "id" of the Post is passed in and then turned into a Post object
+     * automatically by the ParamConverter.
+     */
+    public function commentForm(Post $post): Response
+    {
+        $form = $this->createForm(CommentType::class);
+
+        return $this->render('comment/addComment.html.twig', [
+            'post' => $post,
+            'form' => $form->createView(),
         ]);
     }
 }

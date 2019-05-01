@@ -6,29 +6,28 @@
 {% endblock %}
     
 {% block body %}
-    {# {{ dump() }} #}
-    <!--<h1>Blog</h1>-->
     <div class="panel panel-primary">
-        <br>
-        <!--<h2>Listado de Post</h2>-->
         {% for post in pagination %}
-        <div class="jumbotron p-4 p-md-5 text-dark rounded">
-            <div class="col-md-6 px-0">
-                <h2 class="display-4 font-italic">{{ post.title }}</h2>
+        <div class="jumbotron p-4 p-md-5 mt-5 text-dark rounded">
+            <div class="col-md-12 px-0">
+                <h2 class="display-4 font-italic text-center">{{ post.title }}</h2>
                 {% if post.publishedAt is not null %}
-                    <p class="text-secondary font-italic">{{ post.publishedAt|date('d/m/Y') }} por {{ post.author }}</p>
+                    <h5 class="float-left text-primary font-italic"> De {{ post.author }}</h5>
+                    <h5 class="text-right text-primary font-italic"> Publicado {{ post.publishedAt|date('d/m/Y') }}</h5>
                 {% else %}
-                    <p class="text-secondary font-italic">{{ post.author }}</p>
+                    <h5 class="float-left text-primary font-italic">De {{ post.author }}</h5>
                 {% endif %}
                 <p class="lead my-3">{{ post.content[:500]|raw }}</p>
-                <!--<a href="#" class="stretched-link">Leer más</a>-->
-                <a href="{{ path('app_post_view',{'id':post.id}) }}" class="btn btn-sm btn-info">Ver más</a>
+                <a href="{{ path('app_post_view',{'id':post.id}) }}"
+                   class="btn btn-sm btn-info float-right">Ver más</a>
             </div>
         </div>
         {% endfor %}
         {# display navigation #}
-        <div class="navigation">
-            {{ knp_pagination_render(pagination) }}
+        <div class="container-fluid">
+            <div class="pagination justify-content-center">
+                {{ knp_pagination_render(pagination) }}
+            </div>
         </div>
         <hr>
     </div>
