@@ -124,11 +124,15 @@ class AdminController extends AbstractController
      * @Route("/admin/user/{id}/delete", name="app_admin_user_delete")
      */
     public function deleteUser($id, Request $request){
-        $user=$this->getDoctrine()->getRepository(User::class)->findBy(array('id'=>$id));
-        $userSel=$user[0];
-
+        $user=$this->getDoctrine()->getRepository(User::class)->find($id);
+        // Verifico si el usuario tiene posts
+        $posts=$this->getDoctrine()->getRepository(Post::class)->findBy(array('user'=>$user));
+        if(count($posts)>=1){
+            $this->addFlash('warning', 'Usuario no eliminado pues tiene posts asociados');
+            return $this->redirectToRoute('app_admin_users');
+        }
         $entityManager=$this->getDoctrine()->getManager();
-        $entityManager->remove($userSel);
+        $entityManager->remove($user);
         $entityManager->flush();
         $this->addFlash('success', 'Usuario eliminado correctamente');
         return $this->redirectToRoute('app_admin_users');
